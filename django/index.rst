@@ -107,7 +107,7 @@ Running your dockerized application
 Execute the following command to create a container for the django_drf image,
 which your application will run in::
 
-    docker run -d -p 8080:8000\-v src:/drf_src --name django_drf_app django_drf9
+    docker run -d -p 8080:8000  -v src:/drf_src --name django_drf_app django_drf
 
 
 If `docker run` is successful, open your browser and access your API or
