@@ -15,6 +15,9 @@ A collection of training developed and created by the Docker Kingston Group.
    getting-started-with-docker
    installing-docker
    django/index
+   shortcusts
+   README
+   about
 
 
 Training
