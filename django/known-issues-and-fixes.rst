@@ -44,8 +44,8 @@ Executing the following command `docker exec -it django_drf_app /bin/bash` resul
 
 **Solution:** Run the following command instead: `winpty docker exec -it django_drf_app bash`
 
-Credits to Don-1
+Credits to Don-1_
 
 
-.. Jhamali_: https://github.com/Jhamali
-.. Don-1_: https://github.com/Don-1
+.. _Jhamali: https://github.com/Jhamali
+.. _Don-1: https://github.com/Don-1

@@ -15,13 +15,9 @@ Overview
 
 Different Plone Trainings:
 
-- `How to install docker. <https://dockertraining.readthedocs.io/installing-docker.html>`_
-- `How to dockerize a Django application. <https://dockertraining.readthedocs.io/django/index.html>`_
-
-Documentation
-=============
-
-Documentation on how to use, build and contribute to the trainings can be found on the `Training Website <https://dockertraining.readthedocs.io/about.html>`_ .
+- `Getting Started with Docker. <getting-started-with-docker.html>`_
+- `How to install docker. <installing-docker.html>`_
+- `How to dockerize a Django application. <django/index.html>`_
 
 
 The landing page

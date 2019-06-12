@@ -12,11 +12,12 @@ A collection of training developed and created by the Docker Kingston Group.
    :maxdepth: 2
    :caption: Training Overview:
    
+   README
    getting-started-with-docker
    installing-docker
    django/index
    shortcuts
-   README
+   contributors
    sources
 
 
