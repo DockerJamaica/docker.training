@@ -239,3 +239,9 @@ Sources:
 
 * `Building a Production Ready Django JSON API by Derek Howard <https://thinkster.io/tutorials/django-json-api>`
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Django Training:
+   
+   known-issues-and-fixes

@@ -17,7 +17,7 @@ A collection of training developed and created by the Docker Kingston Group.
    django/index
    shortcuts
    README
-   about
+   sources
 
 
 Training
