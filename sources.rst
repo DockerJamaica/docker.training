@@ -8,3 +8,7 @@ References
 
 - `Quick reStructuredText <http://docutils.sourceforge.net/docs/user/rst/quickref.html#external-hyperlink-targets>`_
 - `Should You Install Docker with the Docker Toolbox or Docker for Mac / Windows? <https://nickjanetakis.com/blog/should-you-use-the-docker-toolbox-or-docker-for-mac-windows>`_
+
+Useful Articles
+==================
+- `Cleaning up docker to reclaim disk space <https://lebkowski.name/docker-volumes/>`_
