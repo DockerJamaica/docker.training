@@ -150,56 +150,86 @@ Docker commands.
 
 Add a docker-compose.yml file
 --------------------------------
+
 ::
-    version: '3'
-    
-    # Build a multiservice arhitecture.
-    services:
+
+   version: '3' 
+   # Build a multiservice arhitecture.
+   services:
       # Setup local instance of the Backend Server
       backend:
-        # Use the public image for the Django Backend Server
-        image: realworldio/django-drf:latest
-        # Set the network for the two service so that they can communicate with each other
-        networks:
-          - reactdrf
-        volumes:
-          - drf-backend:/drf_src
-        # Map port 8000 to port 8199 so that we can access the application on
-        # our host machine by visiting 127.0.0.1:8199
-        ports:
-          - "8199:8000"
+         # Use the public image for the Django Backend Server
+         image: realworldio/django-drf:latest
+         # Set the network for the two service so that they can communicate with each other
+         networks:
+            - reactdrf
+         volumes:
+            - drf-backend:/drf_src
+         # Map port 8000 to port 8199 so that we can access the application on
+         # our host machine by visiting 127.0.0.1:8199
+         ports:
+            - "8199:8000"
       # Create a service called web for the React + Redux app
       web:
-        # Build an image from the files in the project root directory (Dockerfile)
-        build: .
-        depends_on:
-          - backend
-        # Mount the container `/drf` folder to the a `src` folder in the location
-        # of the Dockerfile on the host machine.
-        volumes:
-          - drf-react-react:/usr/src/app/
-        restart: always
-        # Map port 3000 to port 8081 so that we can access the application on
-        # our host machine by visiting 127.0.0.1:8081
-        ports:
-          - "8081:3000"
-        networks:
-          - reactdrf
-    networks:
+         # Build an image from the files in the project root directory (Dockerfile)
+         build: .
+         depends_on:
+            - backend
+         # Mount the container `/drf` folder to the a `src` folder in the location
+         # of the Dockerfile on the host machine.
+         volumes:
+            - drf-react-react:/usr/src/app/
+         restart: always
+         # Map port 3000 to port 8081 so that we can access the application on
+         # our host machine by visiting 127.0.0.1:8081
+         ports:
+            - "8081:3000"
+         networks:
+            - reactdrf
+   networks:
       reactdrf:
-    volumes:
+   volumes:
       drf-backend:
       drf-react-react:
 
 
-Update the API URL for the React + Redux app
+Update the API URL for the React + Mobx app
 -------------------------------------------------
 
 In the ``src/agent.js``, change ``API_ROOT`` to the local server's URL (i.e. http://localhost:8199/api)
 
+Build and run the Django + React microservices
+------------------------------------------------
 
-The original codebase for the :
+::
 
+   docker-compose up -d
+
+Run the following command to verify that the backend and frontend services are running::
+
+   docker ps
+
+If yes, then you should be able to access both site via http://localhost:8199 and http://localhost:8081
+
+
+
+Codebase
+++++++++++
+
+- https://github.com/JamaicanDevelopers/django-realworld-example-app
 - https://github.com/JamaicanDevelopers/react-mobx-realworld-example-app
 - https://github.com/JamaicanDevelopers/react-redux-realworld-example-app
+
+
+
+Sources:
++++++++++
+
+* `Dockerizing a React App by Michael Herman <https://mherman.org/blog/dockerizing-a-react-app/>`
+* `Run a React App in a Docker Container by Peter Jausovec <https://mherman.org/blog/dockerizing-a-react-app/>`
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: React Training:
 
