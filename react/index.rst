@@ -39,7 +39,7 @@ Clone the codebase
 +++++++++++++++++++++
 ::
 
-    git clone git@github.com:gothinkster/react-redux-realworld-example-app.git react-redux
+    git clone https://github.com/gothinkster/react-redux-realworld-example-app.git react-redux
 
 
 Create a Docker file
