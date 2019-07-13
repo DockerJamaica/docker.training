@@ -161,3 +161,20 @@ Remove all images
 ::
 
    docker rmi $(docker images -q)
+
+
+Remove Everything (Images, Containers, Volumes, Networks, etc)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+   docker system prune -a
+   
+
+It will output::
+
+   WARNING! This will remove:
+   	- all stopped containers
+   	- all volumes not used by at least one container
+   	- all networks not used by at least one container
+   	- all images without at least one container associated to them
+   Are you sure you want to continue? [y/N] y
