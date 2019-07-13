@@ -90,7 +90,7 @@ Add the ``node_modules`` in the .dockerignore file
 This will speed up the Docker build process as our local dependencies will not be sent to the Docker daemon.
 
 
-Building the React + Mobx Docker Image
+Building the React + Redux Docker Image
 +++++++++++++++++++++++++++++++++++++++
 
 Build and tag the Docker image::
@@ -104,7 +104,7 @@ along with your image, ``react-redux``::
     docker images
 
 
-Running the React + Mobx Docker in a Container
+Running the React + Redux Docker in a Container
 +++++++++++++++++++++++++++++++++++++++++++++++
 Execute the following command to create a container from the react-redux image,
 which your application will run in::
@@ -123,7 +123,7 @@ By default and for convenience, the application is using the live API server run
 You can view the API spec `here <https://github.com/GoThinkster/productionready/blob/master/api>`_ 
 which contains all routes & responses for the server.
 
-However, we want to setup a local backend server for our React + Mobx app. 
+However, we want to setup a local backend server for our React + Redux app. 
 The source code for the backend server (available for Node, Rails and Django)
 can be found in the main `RealWorld repo <https://github.com/gothinkster/realworld/>`_,
 but we don't have the time to manually setup the backend server. ***This is where Docker shines.***
@@ -193,7 +193,7 @@ Add a docker-compose.yml file
       drf-react-react:
 
 
-Update the API URL for the React + Mobx app
+Update the API URL for the React + Redux app
 -------------------------------------------------
 
 In the ``src/agent.js``, change ``API_ROOT`` to the local server's URL (i.e. http://localhost:8199/api)
@@ -209,9 +209,34 @@ Run the following command to verify that the backend and frontend services are r
 
    docker ps
 
+You should see something similar to::
+
+    CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                    NAMES
+    3764de81cd3d        react-mobx_web                  "docker-entrypoint.s…"   1 minutes ago      Up 1 minutes       0.0.0.0:8081->3000/tcp   react-mobx_web_1
+    88a299a68f59        realworldio/django-drf:latest   "/bin/sh -c 'python …"   1 minutes ago      Up 1 minutes       0.0.0.0:8199->8000/tcp   react-mobx_backend_1
+
 If yes, then you should be able to access both site via http://localhost:8199 and http://localhost:8081
 
+***Please note: by default, the Django backend app doesn't have any users. therefore, we need to add a user
+to make changes to the frontend React app.***
 
+
+Adding a backend Admin User
+-------------------------------------------
+In order to create admin user, we need to access our container to run
+the ``createuser`` command. The following command is used access your container
+bash interface::
+
+    docker exec -it django_drf_app /bin/bash
+
+To add an admin user, you need to run the following code in your 
+container then enter the promoted credentials::
+
+    python manage.py createsuperuser
+
+Afterwards, exit the Docker container running the exit command.
+You should be able to access the backend setting by visiting
+http://localhost:8199/admin
 
 Codebase
 ++++++++++
