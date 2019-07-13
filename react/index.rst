@@ -135,6 +135,7 @@ If you've already created the Docker image for the Django DRF backend server, GR
 If you haven't, you can use the public Django DRF image on `Docker Hub <https://hub.docker.com/r/realworldio/django-drf>`_
 
 ::
+
     docker pull realworldio/django-drf
 
 
