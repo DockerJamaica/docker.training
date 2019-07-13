@@ -16,6 +16,7 @@ A collection of training developed and created by the Docker Kingston Group.
    getting-started-with-docker
    installing-docker
    django/index
+   react/index
    shortcuts
    contributors
    sources
@@ -27,6 +28,9 @@ Training
 :doc:`django/index`
    This training is intended for people who are new to Docker or
    want to learn about the best practices of Django + Docker development.
+:doc:`react/index`
+   This training is intended for people who are new to Docker or
+   want to learn about the best practices of React + Docker development.
 
 
 Indices and tables
