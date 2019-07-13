@@ -95,7 +95,6 @@ running the following command::
     docker build -t django_drf .
 
 
-
 If you run the following command you will see the Python:3.5.7 image
 \along with your image, `django_drf`::
 
