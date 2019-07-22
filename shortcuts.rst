@@ -167,6 +167,7 @@ Remove Everything (Images, Containers, Volumes, Networks, etc)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
+
    docker system prune -a
    
 
