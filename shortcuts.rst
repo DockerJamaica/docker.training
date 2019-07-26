@@ -155,6 +155,13 @@ Remove a docker image
 
    docker rmi wordpress
 
+Remove dangling images
+~~~~~~~~~~~~~~~~~~~~~~~~~
+if you do docker images and see `<none>:<none>` images in the list, these are dangling images and needs to be pruned, else they will unnecessary allocate your disks space. Run the following comand to remove dangling images
+::
+
+   docker rmi $(docker images -f "dangling=true" -q)
+
 Remove all images
 ~~~~~~~~~~~~~~~~~
 
