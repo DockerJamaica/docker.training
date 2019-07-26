@@ -79,6 +79,7 @@ Running a docker container on a particular port
 
 Running docker containers in the background using daemon
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use `-d` or `--detach` to run a container in the background.
 
 .. code:: bash
 
