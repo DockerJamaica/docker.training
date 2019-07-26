@@ -8,6 +8,7 @@ References
 
 - `Quick reStructuredText <http://docutils.sourceforge.net/docs/user/rst/quickref.html#external-hyperlink-targets>`_
 - `Should You Install Docker with the Docker Toolbox or Docker for Mac / Windows? <https://nickjanetakis.com/blog/should-you-use-the-docker-toolbox-or-docker-for-mac-windows>`_
+- `What are Docker <none>:<none> images? <https://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/>`_
 
 Useful Articles
 ==================
