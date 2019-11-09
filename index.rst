@@ -15,6 +15,7 @@ A collection of training developed and created by the Docker Kingston Group.
    README
    getting-started-with-docker
    installing-docker
+   container-driven-development
    django/index
    react/index
    robot/index
