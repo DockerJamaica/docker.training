@@ -149,6 +149,17 @@ List docker images
 
    docker images
 
+Moving Images from one host to another
+-------------------------------------------
+You will need to save the Docker image as a tar file:
+::
+   docker save -o <path for generated tar file> <image name>
+
+Then copy your image to a new system with regular file transfer tools such as cp, scp or rsync(preferred for big files). After that you will have to load the image into Docker
+::
+   docker load -i <path to image tar file>
+
+
 Remove a docker image
 ---------------------
 
