@@ -26,41 +26,43 @@ To get started, we need to create a new folder and create a skeleton
 package.json file. The package.json file is what bootstraps our Node app 
 and manages the dependencies of our project.
 ::
-    {
-      "name": "order-web-api",
-      "version": "1.0.0",
-      "description": "Node.js on Docker",
-      "author": "Oshane Bailey <b4.oshany@gmail.com>",
-      "main": "app.js",
-      "scripts": {
-        "start": "nodemon app.js"
-      },
-      "dependencies": {
-        "body-parser": "^1.19.0",
-        "express": "^4.17.1",
-        "nodemon": "^1.19.4"
-      }
+
+  {
+    "name": "order-web-api",
+    "version": "1.0.0",
+    "description": "Node.js on Docker",
+    "author": "Oshane Bailey <b4.oshany@gmail.com>",
+    "main": "app.js",
+    "scripts": {
+      "start": "nodemon app.js"
+    },
+    "dependencies": {
+      "body-parser": "^1.19.0",
+      "express": "^4.17.1",
+      "nodemon": "^1.19.4"
     }
+  }
 
 
 Next, we'll create a basic NodeJs server configuration. Let's create an app.js
 file and add the following code as its content:
 ::
-    const express = require("express");
-    
-    const app = express();
-    const bodyparser = require("body-parser");
-    
-    const port = process.env.PORT || 3200;
-    
-    // middleware
-    
-    app.use(bodyparser.json());
-    app.use(bodyparser.urlencoded({ extended: false }));
-    
-    app.listen(port, () => {
-      console.log(`running at port ${port}`);
-    });
+
+  const express = require("express");
+  
+  const app = express();
+  const bodyparser = require("body-parser");
+  
+  const port = process.env.PORT || 3200;
+  
+  // middleware
+  
+  app.use(bodyparser.json());
+  app.use(bodyparser.urlencoded({ extended: false }));
+  
+  app.listen(port, () => {
+    console.log(`running at port ${port}`);
+  });
 
 We're done setting up the app.
 
@@ -69,44 +71,46 @@ Setting Up the Containerized Environment
 Create the docker file that uses the node image and set up the application
 inside the container.
 ::
-    FROM node:10
-    
-    # Create app directory
-    WORKDIR /usr/src/app
-    
-    # Install app dependencies
-    # A wildcard is used to ensure both package.json AND package-lock.json are copied
-    # where available (npm@5+)
-    COPY package*.json ./
-    
-    RUN npm install
-    # If you are building your code for production
-    # RUN npm ci --only=production
-    
-    # Bundle app source
-    COPY . .
-    
-    EXPOSE 8080
-    CMD [ "node", "start" ]
+
+  FROM node:10
+  
+  # Create app directory
+  WORKDIR /usr/src/app
+  
+  # Install app dependencies
+  # A wildcard is used to ensure both package.json AND package-lock.json are copied
+  # where available (npm@5+)
+  COPY package*.json ./
+  
+  RUN npm install
+  # If you are building your code for production
+  # RUN npm ci --only=production
+  
+  # Bundle app source
+  COPY . .
+  
+  EXPOSE 8080
+  CMD [ "node", "start" ]
 
 Next, create the docker-compose file that will manage our application and
 additional microservices.
 ::
-    version: '3.3'
-    
-    services:
-      web:
-        build: .
-        image: node:10
-        ports:
-          - '8080:8080'
-        # restart: always
-        volumes: 
-          - ./:/usr/src/app
-        networks:
-          - restweb
-    networks:
-      restweb:
+
+  version: '3.3'
+  
+  services:
+    web:
+      build: .
+      image: node:10
+      ports:
+        - '8080:8080'
+      # restart: always
+      volumes: 
+        - ./:/usr/src/app
+      networks:
+        - restweb
+  networks:
+    restweb:
 
 However, if you run the docker-compose up -d command, the container will not
 run. If you run docker-compose logs, you'll notice that it can't find the
@@ -117,34 +121,36 @@ we will create an entry point file that runs the npm install command,
 which creates the node_modules folder and other related files.
 Lets called file entrypoint.sh.
 ::
-    cd /usr/src/app
-    npm install
-    npm start
+
+  cd /usr/src/app
+  npm install
+  npm start
 
 Afterwards, edit the Dockerfile to use the entrypoint.sh as the 
 to run upon running a container.
 ::
-    FROM node:10
-    
-    # Create app directory
-    WORKDIR /usr/src/app
-    
-    # Install app dependencies
-    # A wildcard is used to ensure both package.json AND package-lock.json are copied
-    # where available (npm@5+)
-    COPY package*.json ./
-    
-    RUN npm install
-    # If you are building your code for production
-    # RUN npm ci --only=production
-    
-    # Bundle app source
-    COPY . .
-    RUN mv entrypoint.sh /appstart.sh
-    RUN chmod 744 /appstart.sh
-    
-    EXPOSE 8080
-    CMD [ "/appstart.sh" ]
+
+  FROM node:10
+  
+  # Create app directory
+  WORKDIR /usr/src/app
+  
+  # Install app dependencies
+  # A wildcard is used to ensure both package.json AND package-lock.json are copied
+  # where available (npm@5+)
+  COPY package*.json ./
+  
+  RUN npm install
+  # If you are building your code for production
+  # RUN npm ci --only=production
+  
+  # Bundle app source
+  COPY . .
+  RUN mv entrypoint.sh /appstart.sh
+  RUN chmod 744 /appstart.sh
+  
+  EXPOSE 8080
+  CMD [ "/appstart.sh" ]
 
 
 Creating a New Food Order
@@ -159,7 +165,8 @@ so we’ll skip the database layer.
 
 Let’s create a variable to hold all the orders in our app.js file, like so:
 ::
-    const orders = [];
+
+  const orders = [];
 
 This will hold all food orders that come into our API from the client.
 To create a new food order, we’ll collect the following:
@@ -171,27 +178,27 @@ To create a new food order, we’ll collect the following:
 To create a new order, input to the following code just before the app.listen,
 like so::
 
-    app.post("/new_order", (req, res) => {
-      const order = req.body;
-    
-      if (order.food_name && order.customer_name && order.food_qty) {
-        orders.push({
-          ...order,
-    
-          id: `${orders.length + 1}`,
-    
-          date: Date.now().toString()
-        });
-    
-        res.status(200).json({
-          message: "Order created successfully"
-        });
-      } else {
-        res.status(401).json({
-          message: "Invalid Order creation"
-        });
-      }
-    });
+  app.post("/new_order", (req, res) => {
+    const order = req.body;
+  
+    if (order.food_name && order.customer_name && order.food_qty) {
+      orders.push({
+        ...order,
+  
+        id: `${orders.length + 1}`,
+  
+        date: Date.now().toString()
+      });
+  
+      res.status(200).json({
+        message: "Order created successfully"
+      });
+    } else {
+      res.status(401).json({
+        message: "Invalid Order creation"
+      });
+    }
+  });
 
 We created a new route, /new_order, with the post method to accept the incoming
 food order data, and we check if any of the required data needed to created a
@@ -201,15 +208,16 @@ the server.
 
 Now, lets test the creation endpoint with the command below:
 ::
-    curl -X "POST" -H "Content-Type: application/json" -d '{"food_name": "chicken", "customer_name": "oshane", "food_qty": "2"}' "localhost:8080/new_order"
+
+  curl -X "POST" -H "Content-Type: application/json" -d '{"food_name": "chicken", "customer_name": "oshane", "food_qty": "2"}' "localhost:8080/new_order"
 
 Getting All Food Orders
 --------------------------
 To retrieve all the food orders, simply input the code below, like so::
 
-    app.get("/get_orders", (req, res) => {
-      res.status(200).send(orders);
-    });
+  app.get("/get_orders", (req, res) => {
+    res.status(200).send(orders);
+  });
 
 This creates a get request on the /get_orders route and sends the orders
 as an array to the client.
@@ -218,30 +226,30 @@ Updating a Food Order
 -------------------------
 To update a food order, we use the patch method, like so::
 
-    app.patch("/order/:id", (req, res) => {
-      const order_id = req.params.id;
-    
-      const order_update = req.body;
-    
-      for (let order of orders) {
-        if (order.id == order_id) {
-          if (order_update.food_name != null || undefined)
-            order.food_name = order_update.food_name;
-    
-          if (order_update.food_qty != null || undefined)
-            order.food_qty = order_update.food_qty;
-    
-          if (order_update.customer_name != null || undefined)
-            order.customer_name = order_update.customer_name;
-    
-          return res
-            .status(200)
-            .json({ message: "Updated Succesfully", data: order });
-        }
+  app.patch("/order/:id", (req, res) => {
+    const order_id = req.params.id;
+  
+    const order_update = req.body;
+  
+    for (let order of orders) {
+      if (order.id == order_id) {
+        if (order_update.food_name != null || undefined)
+          order.food_name = order_update.food_name;
+  
+        if (order_update.food_qty != null || undefined)
+          order.food_qty = order_update.food_qty;
+  
+        if (order_update.customer_name != null || undefined)
+          order.customer_name = order_update.customer_name;
+  
+        return res
+          .status(200)
+          .json({ message: "Updated Succesfully", data: order });
       }
-    
-      res.status(404).json({ message: "Invalid Order Id" });
-    });
+    }
+  
+    res.status(404).json({ message: "Invalid Order Id" });
+  });
 
 This accepts the order id and the updates related to the order id and updates
 it by looping through the orders array to get the id that matches with the
@@ -254,21 +262,21 @@ Deleting a Food Order
 To delete a food order we create a route that accepts the id of the particular
 order that needs to be deleted, like so::
 
-    app.delete("/order/:id", (req, res) => {
-      const order_id = req.params.id;
-    
-      for (let order of orders) {
-        if (order.id == order_id) {
-          orders.splice(orders.indexOf(order), 1);
-    
-          return res.status(200).json({
-            message: "Deleted Successfully"
-          });
-        }
+  app.delete("/order/:id", (req, res) => {
+    const order_id = req.params.id;
+  
+    for (let order of orders) {
+      if (order.id == order_id) {
+        orders.splice(orders.indexOf(order), 1);
+  
+        return res.status(200).json({
+          message: "Deleted Successfully"
+        });
       }
-    
-      res.status(404).json({ message: "Invalid Order Id" });
-    });
+    }
+  
+    res.status(404).json({ message: "Invalid Order Id" });
+  });
 
 This accepts the order id and finds the order in the orders array by looping
 current and getting the corresponding order with the id provided.
