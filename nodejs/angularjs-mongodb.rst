@@ -24,8 +24,8 @@ which may be tedious and troublesome especially if there are some system
 requirements or another version of Node or MongoDB are installed.
 
 
-Why use docker with the React + Redux app that has so few requirements?
---------------------------------------------------------------------------
+Why use docker with the AngularJS + Express + MongoDB app that has so few requirements?
+---------------------------------------------------------------------------------------------
 * Reduce cost of installing Node, NPM, MongoDB and setting up the application 
   working environment on each machine.
 * Isolating dependencies and source code:
