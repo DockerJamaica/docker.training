@@ -46,7 +46,7 @@ Clone the codebase
 +++++++++++++++++++++
 ::
 
-   git clone git@github.com:sjfortin/real-estate-listings.git
+   git clone https://github.com/sjfortin/real-estate-listings.git
 
 
 Create a Dockerfile
