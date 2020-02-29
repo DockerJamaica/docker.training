@@ -42,7 +42,7 @@ Clone the codebase
     git clone https://github.com/gothinkster/react-redux-realworld-example-app.git react-redux
 
 
-Create a Docker file
+Create a Dockerfile
 ++++++++++++++++++++
 In the root folder of your project, create a file 
 named ``Dockerfile``. Next, add the following code to your docker file.
@@ -71,7 +71,8 @@ named ``Dockerfile``. Next, add the following code to your docker file.
     
     CMD npm start
 
-:
+..
+
     Note: The reason why we choose to use Node version 10 image is because some
     of the dependencies for the React + Redux app are depreciated in newer version
     of node.
@@ -87,7 +88,8 @@ Add the ``node_modules`` in the .dockerignore file
         echo 'node_modules' > .dockerignore
 
 
-This will speed up the Docker build process as our local dependencies will not be sent to the Docker daemon.
+Any file or folder found in the ``.dockerignore`` file will not be added to the
+Docker image when the ``COPY`` directive is executed in the Dockerfile.
 
 
 Building the React + Redux Docker Image
