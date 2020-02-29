@@ -18,7 +18,6 @@ A collection of training developed and created by the Docker Kingston Group.
    container-driven-development
    django/index
    nodejs/index
-   react/index
    robot/index
    shortcuts
    contributors
@@ -34,9 +33,6 @@ Training
 :doc:`nodejs/index`
    This training is intended for people who
    want to learn about the best practices of NodeJS + Docker development.
-:doc:`react/index`
-   This training is intended for people who are new to Docker or
-   want to learn about the best practices of React + Docker development.
 :doc:`robot/index`
    This training is intended for people who are new to Docker or
    want to learn about the best practices of Robot Frameowrk + Docker development.
