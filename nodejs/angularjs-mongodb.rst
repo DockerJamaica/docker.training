@@ -263,28 +263,37 @@ At this point, your ``docker-compose`` file should look like::
 
    version: '3'
    services:
-     database:
-       image: mongo:4.0.4
+     mongo:
+       image: mongo
        restart: always
        environment:
          MONGO_INITDB_ROOT_USERNAME: root
          MONGO_INITDB_ROOT_PASSWORD: example
-         MONGO_INITDB_DATABASE: realestate
        volumes:
          - ./dump/realestate:/dump/realestate-listing
          - ./server/data:/dump/scripts
          - ../mongo-data:/data/db
        ports:
          - '27017-27019:27017-27019'
+
+     mongo-express:
+       image: mongo-express
+       restart: always
+       ports:
+         - 8081:8081
+       environment:
+         ME_CONFIG_MONGODB_ADMINUSERNAME: root
+         ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
      web:
        build: .
        image: realestate-angularjs
        environment:
-         MONGODB_URI: mongodb://root:example@database/realestate
+         MONGODB_URI: mongodb://root:example@mongo/admin
        depends_on:
-         - database
+         - mongo
        ports:
-         - 8080:5000
+         - 8082:5000
 
 
 Execute the following command to run the dockerized application along with
