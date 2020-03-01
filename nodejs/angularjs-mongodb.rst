@@ -58,34 +58,34 @@ the application.**
 
 ::
 
-   # The first instruction is what image we want to base our container on
-   # We Use an official Node version 10 image as a parent image
-   FROM node:8.10
-   
-   # Create an environment variable for MongoDB URI
-   ENV MONGODB_URI='mongodb://localhost:27017/realestate'
-   
-   # Set working directory for the project to /usr/src/app
-   # NOTE: all the directives that follow in the Dockerfile will be executed
-   # in working directory.
-   WORKDIR /usr/src/app
-   
-   # Copy the contents of the project folder into the working directory of
-   # docker image
-   COPY . /usr/src/app/
-   
-   # Install any needed packages specified in package.json
-   RUN npm install
-   
-   RUN ls /usr/src/app
-   RUN ls /usr/src/app/public
-   
-   EXPOSE 5000
-   
-   HEALTHCHECK --interval=1m --timeout=5s --start-period=1m \
-     CMD nc -z -w5 127.0.0.1 5080 || exit 1
-   
-   CMD npm start
+    # The first instruction is what image we want to base our container on
+    # We Use an official Node version 10 image as a parent image
+    FROM node:8.10
+    
+    # Create an environment variable for MongoDB URI
+    ENV MONGODB_URI='mongodb://localhost:27017/realestate'
+    
+    # Set working directory for the project to /usr/src/app
+    # NOTE: all the directives that follow in the Dockerfile will be executed
+    # in working directory.
+    WORKDIR /usr/src/app
+    
+    # Copy the contents of the project folder into the working directory of
+    # docker image
+    COPY . /usr/src/app/
+    
+    # Install any needed packages specified in package.json
+    RUN npm install
+
+    EXPOSE 5000
+    
+    # Periodically check if the application is running. If not, shutdown the
+    # container.
+    HEALTHCHECK --interval=2m --timeout=5s --start-period=2m \
+      CMD nc -z -w5 127.0.0.1 5080 || exit 1
+    
+    # Wait 5 seconds for the MongoDB connection
+    CMD echo "Warming up" && sleep 5 && npm start
 
 ..
 
@@ -149,44 +149,57 @@ database service for internal usage.
 In the ``server/data`` folder, there are two JavaScript files that are
 used to populate the Mongo database. In addition, there two bson files located
 in the ``dump/realestate`` folder, which could be used to populate the database
-. However, we will be using the JavaScript importer instead.
+. However, we will not be using any of the sample data, instead, we are going
+to setup a new database in mongodb.
 
-In the database service, we add three (3) volumes that maps the
-``dump/realestate``, ``server/data`` and ``../mongo-data`` folders to the
-container for our application.
-
-The copy and save the following code to your ``docker-compose.yml`` file.
+Copy the following code to your ``docker-compose.yml`` file.
 
 ::
 
-   version: '3'
-   services:
-     database:
-       image: mongo:4.0.4
-       restart: always
-       environment:
-         MONGO_INITDB_ROOT_USERNAME: root
-         MONGO_INITDB_ROOT_PASSWORD: example
-         MONGO_INITDB_DATABASE: realestate
-       volumes:
-         - ./dump/realestate:/dump/realestate-listing
-         - ./server/data:/dump/scripts
-         - ../mongo-data:/data/db
-       ports:
-         - '27017-27019:27017-27019'
-
+  version: '3' 
+  services:
+    database:
+      image: mongo
+      restart: always
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: example
+        # Create a new database. Please note, the 
+        # /docker-entrypoint-initdb.d/init.js has to be executed
+        # in order for the database to be created 
+        MONGO_INITDB_DATABASE: realestate
+      volumes:
+        # Add the db-init.js file to the Mongo DB container
+        - ./db-init.js:/docker-entrypoint-initdb.d/init.js:ro
+      ports:
+        - '27017-27019:27017-27019'
 
 ..
 
    Note: The `MongoDB Official Docker Image`_ has a list of environmental
    variables that are used to configure MongoDB.
 
+Next, create the ``db-init.js`` file in the root of the project as seen
+in the docker-compose file. Afterwards, add the following code to the file::
+
+  db.createUser({
+    user: "user",
+    pwd: "secretPassword",
+    roles: [ { role: "dbOwner", db: "realestate" } ]
+  })
+  
+  db.users.insert({
+    name: "user"
+  })
+
+The code above will create a new MongoDB user with the role of database owner.
+
 Now that the database service has been defined, execute the following command
 to spin the MongoDB container.
 
 ::
    
-   docker-compose up -d
+  docker-compose up -d
 
 ..
 
@@ -199,31 +212,40 @@ Afterwards, execute the following command to check if the Mongo DB container is
 running.
 ::
 
-   docker-compose ps
+  docker-compose ps
 
 
 You should see something similar to the following output.
 ::
-                Name                           Command             State                                      Ports                                    
-   ----------------------------------------------------------------------------------------------------------------------------------------------------
-   real-estate-listings_database_1   docker-entrypoint.sh mongod   Up      0.0.0.0:27017->27017/tcp, 0.0.0.0:27018->27018/tcp, 0.0.0.0:27019->27019/tcp
+              Name                           Command             State                                      Ports                                    
+  ----------------------------------------------------------------------------------------------------------------------------------------------------
+  real-estate-listings_database_1   docker-entrypoint.sh mongod   Up      0.0.0.0:27017->27017/tcp, 0.0.0.0:27018->27018/tcp, 0.0.0.0:27019->27019/tcp
    
 
-Importing the sample data to MongoDB
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Add Mongo Express Service to Manage MongoDB
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now that our MongoDB container is running and we can access Mongo databse. We
-need to import the data by accessing the container. Earlier, in our
-``docker-compose.yml`` file, we mapped the ``dump/realestate``
-and ``server/data`` directories to their respective path in container,
-``/dump/realestate-listing`` and ``/dump/scripts``.
+can add support for Mongo Express. Mongo Express is a lightweight web-based
+administrative interface deployed to manage MongoDB databases interactively.
 
-According to the project's ``README.md`` file, we can use the ``mongoimport``
-command to import the data. Therefore, we should be able to easily import the
-data to our MongoDB database by executing the following commands::
+Add the following lines to your ``docker-compose.yml`` file::
 
-   docker-compose exec database mongoimport --host mongodb  --db realestate --collection rentals --file /dump/scripts/rentalData.js
-   docker-compose exec database mongoimport --host mongodb  --db realestate --collection listings --file /dump/scripts/listingData.js
+    mongo-express:
+      image: mongo-express
+      restart: always
+      ports:
+        - 8081:8081
+      environment:
+        ME_CONFIG_MONGODB_ADMINUSERNAME: root
+        ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      depends_on:
+        - database
+
+..
+
+  Note, the ``mongo-express`` service is using the MongoDB user'c credentials
+  that was set the database service.
 
 
 Running the application in the Docker Container
@@ -238,16 +260,17 @@ Before we can run our dockerized application using ``docker-compose``, we need
 to create another service in our ``docker-compose.yml`` file to manage our
 application. Add the following lines to your ``docker-compose.yml file``::
 
-
-     web:
-       build: .
-       image: realestate-angularjs
-       environment:
-         MONGODB_URI: mongodb://root:example@database/realestate
-       depends_on:
-         - database
-       ports:
-         - 8080:5000
+    web:
+      build: .
+      image: realestate-angularjs
+      environment:
+        # Use the username and password found in the db-init.js file instead
+        # of the root username. 
+        MONGODB_URI: mongodb://user:secretPassword@database/realestate
+      depends_on:
+        - database
+      ports:
+        - 8082:5000
 
 
 ..
@@ -261,73 +284,80 @@ application. Add the following lines to your ``docker-compose.yml file``::
 
 At this point, your ``docker-compose`` file should look like::
 
-   version: '3'
-   services:
-     mongo:
-       image: mongo
-       restart: always
-       environment:
-         MONGO_INITDB_ROOT_USERNAME: root
-         MONGO_INITDB_ROOT_PASSWORD: example
-       volumes:
-         - ./dump/realestate:/dump/realestate-listing
-         - ./server/data:/dump/scripts
-         - ../mongo-data:/data/db
-       ports:
-         - '27017-27019:27017-27019'
-
-     mongo-express:
-       image: mongo-express
-       restart: always
-       ports:
-         - 8081:8081
-       environment:
-         ME_CONFIG_MONGODB_ADMINUSERNAME: root
-         ME_CONFIG_MONGODB_ADMINPASSWORD: example
-
-     web:
-       build: .
-       image: realestate-angularjs
-       environment:
-         MONGODB_URI: mongodb://root:example@mongo/admin
-       depends_on:
-         - mongo
-       ports:
-         - 8082:5000
+  version: '3' 
+  services:
+    mongo:
+      image: mongo
+      restart: always
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: example
+        # Create a new database. Please note, the 
+        # /docker-entrypoint-initdb.d/init.js has to be executed
+        # in order for the database to be created 
+        MONGO_INITDB_DATABASE: realestate
+      volumes:
+        # Add the db-init.js file to the Mongo DB container
+        - ./db-init.js:/docker-entrypoint-initdb.d/init.js:ro
+      ports:
+        - '27017-27019:27017-27019'
+  
+    mongo-express:
+      image: mongo-express
+      restart: always
+      ports:
+        - 8081:8081
+      environment:
+        ME_CONFIG_MONGODB_ADMINUSERNAME: root
+        ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      depends_on:
+        - database
+  
+    web:
+      build: .
+      image: realestate-angularjs
+      environment:
+        # Use the username and password found in the db-init.js file instead
+        # of the root username. 
+        MONGODB_URI: mongodb://user:secretPassword@database/realestate
+      depends_on:
+        - database
+      ports:
+        - 8082:5000
 
 
 Execute the following command to run the dockerized application along with
 the MongoDB Service::
 
-   docker-compose up -d --build
+  docker-compose up -d --build
 
 
 Afterwards, execute the following command to check if the application and Mongo
 DB container are running.
 ::
 
-   docker-compose ps
+  docker-compose ps
 
 
 You should see something similar to the following output::
    
-                Name                           Command             State                                      Ports                                    
-   ----------------------------------------------------------------------------------------------------------------------------------------------------
-   real-estate-listings_database_1   docker-entrypoint.sh mongod   Up      0.0.0.0:27017->27017/tcp, 0.0.0.0:27018->27018/tcp, 0.0.0.0:27019->27019/tcp
-   real-estate-listings_web_1        /bin/sh -c npm start          Up      3000/tcp, 0.0.0.0:8080->5000/tcp   
+              Name                           Command             State                                      Ports                                    
+  ----------------------------------------------------------------------------------------------------------------------------------------------------
+  real-estate-listings_database_1   docker-entrypoint.sh mongod   Up      0.0.0.0:27017->27017/tcp, 0.0.0.0:27018->27018/tcp, 0.0.0.0:27019->27019/tcp
+  real-estate-listings_web_1        /bin/sh -c npm start          Up      3000/tcp, 0.0.0.0:8080->5000/tcp   
 
 
 If you wish to see the logs and output for the application and/or MongoDB, run the
 following command::
 
-   # See logs for all services
-   docker-compose logs -f
-   
-   # See logs for only the application service
-   docker-compose logs -f web
-   
-   # See logs for only the MongoDB service
-   docker-compose logs -f database
+  # See logs for all services
+  docker-compose logs -f
+  
+  # See logs for only the application service
+  docker-compose logs -f web
+  
+  # See logs for only the MongoDB service
+  docker-compose logs -f database
 
 
 Finally
