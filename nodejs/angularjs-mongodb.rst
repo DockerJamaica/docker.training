@@ -11,7 +11,7 @@ In this training, we will focus on dockerizing a node-based AngularJS + Express
 + application that is using MongoDB as it's database backend.
 
 The application is a Real Estate Listing website. The codebase can be found
-at `https://github.com/DockerJamaica/real-estate-listings <https://github.com/DockerJamaica/real-estate-listings>`_.
+at `https://github.com/sjfortin/real-estate-listings.git <https://github.com/sjfortin/real-estate-listings.git>`_.
 
 Normally, the requirements for setting up and running this application are:
 
@@ -239,13 +239,14 @@ Add the following lines to your ``docker-compose.yml`` file::
       environment:
         ME_CONFIG_MONGODB_ADMINUSERNAME: root
         ME_CONFIG_MONGODB_ADMINPASSWORD: example
+        ME_CONFIG_MONGODB_SERVER: database
       depends_on:
         - database
 
 ..
 
-  Note, the ``mongo-express`` service is using the MongoDB user'c credentials
-  that was set the database service.
+  Note, the ``mongo-express`` service is using the MongoDB user's credentials
+  that was set the database service and the database service name.
 
 
 Running the application in the Docker Container
@@ -286,7 +287,7 @@ At this point, your ``docker-compose`` file should look like::
 
   version: '3' 
   services:
-    mongo:
+    database:
       image: mongo
       restart: always
       environment:
@@ -310,6 +311,7 @@ At this point, your ``docker-compose`` file should look like::
       environment:
         ME_CONFIG_MONGODB_ADMINUSERNAME: root
         ME_CONFIG_MONGODB_ADMINPASSWORD: example
+        ME_CONFIG_MONGODB_SERVER: database
       depends_on:
         - database
   
@@ -365,6 +367,9 @@ Finally
 
 You can visit http://localhost:8080 to see the application in action.
 
+You can find the finish source code for the project on
+`DockerJamaica Github page <https://github.com/DockerJamaica/real-estate-listings>`_
+
 
 For more information on Docker and Docker Compose, please visit the following
 links:
@@ -376,6 +381,14 @@ For list of available Docker and Docker Compose commands:
 
 - `Docker Commands <https://docs.docker.com/>`_
 - `Docker Compose Commands <https://docs.docker.com/engine/reference/commandline/cli/>`_
+
+
+If you find a bug in the project source code or documentation,
+you can help us by submitting an issue or submit a Pull Request with
+the fix to our Github repositories.
+
+- `Real Estate App repository <https://github.com/DockerJamaica/real-estate-listings>`_
+- `Docker Training repository <https://github.com/DockerJamaica/docker.training/blob/master/nodejs/angularjs-mongodb.rst>`_.
 
 
 

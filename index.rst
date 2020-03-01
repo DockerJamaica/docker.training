@@ -20,6 +20,7 @@ A collection of training developed and created by the Docker Kingston Group.
    nodejs/index
    robot/index
    shortcuts
+   about
    contributors
    sources
 
