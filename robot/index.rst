@@ -27,7 +27,7 @@ Why use Docker with the Robot Frameowrk
 
 
 Getting Started with Docker Robot Frameowrk
-====================================================
+----------------------------------------------
 
 Clone this repository
 
@@ -49,12 +49,12 @@ Run the tests example tests
 
 
 Contents
-========
+^^^^^^^^^^^^^
 
 This image contains the following to facilitate robot testing
 
 Xvfb
-----
+^^^^^^^
 
 You can use it to start a visual display and fire up a browser for UI
 testing.
@@ -66,7 +66,7 @@ Example (suites/virtual_display.robot):
    Start Virtual Display    1920    1080
 
 Selenium2Library
-----------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 More details here
 http://robotframework.org/Selenium2Library/Selenium2Library.html
@@ -74,7 +74,7 @@ http://robotframework.org/Selenium2Library/Selenium2Library.html
 Also have a look at **suites/virtual_display.robot**
 
 HttpLibrary.HTTP
-----------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 More details here https://github.com/peritus/robotframework-httplibrary
 
@@ -89,13 +89,13 @@ Example:
    [return]                ${response}
 
 robotframework-sshlibrary
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 More details here
 http://robotframework.org/SSHLibrary/latest/SSHLibrary.html
 
 robotframework-excellibrary
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 More details here
 http://navinet.github.io/robotframework-excellibrary/ExcelLibrary-KeywordDocumentation.html
@@ -108,7 +108,7 @@ http://navinet.github.io/robotframework-excellibrary/ExcelLibrary-KeywordDocumen
 
 
 Sources:
-+++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * `Robot Framework With Docker in less than 10 minutes by Ipatios Asmanidis <https://medium.com/@ypasmk/robot-framework-with-docker-in-less-than-10-minutes-7b86df769c22>`
 * `robot-framework-docker <https://github.com/ypasmk/robot-framework-docker/>`

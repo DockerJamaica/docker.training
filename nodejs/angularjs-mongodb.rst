@@ -1,13 +1,13 @@
-.. Docker Training documentation AngularJS + MongoDb, created by
+.. Docker Training documentation Angular + MongoDb, created by
    sphinx-quickstart on Fri Feb 28, 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 
-Dockerizing a AngularJS, Node.js, Express and MongoDB Application
+Dockerizing a Angular, Node.js, Express and MongoDB Application
 ====================================================================
 
-In this training, we will focus on dockerizing a node-based AngularJS + Express
+In this training, we will focus on dockerizing a node-based Angular + Express
 + application that is using MongoDB as it's database backend.
 
 The application is a Real Estate Listing website. The codebase can be found
@@ -24,7 +24,7 @@ which may be tedious and troublesome especially if there are some system
 requirements or another version of Node or MongoDB are installed.
 
 
-Why use docker with the AngularJS + Express + MongoDB app that has so few requirements?
+Why use docker with the Angular + Express + MongoDB app that has so few requirements?
 ---------------------------------------------------------------------------------------------
 * Reduce cost of installing Node, NPM, MongoDB and setting up the application 
   working environment on each machine.
@@ -90,7 +90,7 @@ the application.**
 ..
 
     Note: The reason why we choose to use Node version 8.10 image is because some
-    of the dependencies for the AngularJS app are depreciated in newer version
+    of the dependencies for the Angular app are depreciated in newer version
     of node.
     see `https://hub.docker.com/_/node <https://www.google.com/url?q=https://hub.docker.com/_/node>`_
 
@@ -113,14 +113,14 @@ Any file or folder found in the ``.dockerignore`` file will not be added to the
 Docker image when the ``COPY`` directive is executed in the Dockerfile.
 
 
-Building AngularJS Docker Image
+Building Angular Docker Image
 ++++++++++++++++++++++++++++++++++
 
 Run the ``docker build`` command in the current directory 
 with ``-t`` to name the Docker image as seen
 in the command below::
 
-    docker build -t realestate-angularjs ./
+    docker build -t realestate-angular ./
 
 
 Setting up the Database and Other Requirements
@@ -263,7 +263,7 @@ application. Add the following lines to your ``docker-compose.yml file``::
 
     web:
       build: .
-      image: realestate-angularjs
+      image: realestate-angular
       environment:
         # Use the username and password found in the db-init.js file instead
         # of the root username. 
@@ -317,7 +317,7 @@ At this point, your ``docker-compose`` file should look like::
   
     web:
       build: .
-      image: realestate-angularjs
+      image: realestate-angular
       environment:
         # Use the username and password found in the db-init.js file instead
         # of the root username. 
@@ -388,7 +388,7 @@ you can help us by submitting an issue or submit a Pull Request with
 the fix to our Github repositories.
 
 - `Real Estate App repository <https://github.com/DockerJamaica/real-estate-listings>`_
-- `Docker Training repository <https://github.com/DockerJamaica/docker.training/blob/master/nodejs/angularjs-mongodb.rst>`_.
+- `Docker Training repository <https://github.com/DockerJamaica/docker.training/blob/master/nodejs/angular-mongodb.rst>`_.
 
 
 
