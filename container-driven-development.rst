@@ -6,7 +6,7 @@
 Container Driven Development
 ================================
 
-Container driven dedopment is a means by which application is developed, tested
+Container driven development is a means by which application is developed, tested
 and executed inside a containerized environment from the very beginning of
 the application development cycle. 
 
